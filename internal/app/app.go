@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"urlShortener/internal/domain/entity"
 	"urlShortener/internal/infrastructure/database"
+	"urlShortener/internal/interface/router"
 )
 
 func Run() {
@@ -11,5 +12,7 @@ func Run() {
 	db := database.NewDB()
 
 	db.AutoMigrate(&entity.Urls{})
+
+	router.InitializeRoutes(r, db)
 	r.Run("localhost:8085")
 }

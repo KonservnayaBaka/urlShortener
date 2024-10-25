@@ -13,7 +13,7 @@ func GenerateShortURL(originalUrl string, db *gorm.DB) string {
 
 	shortUrl := hashString[:8]
 
-	if uniqCheck(shortUrl, db) == false {
+	if uniqCheck(shortUrl, db) == true {
 		shortUrl = hashString[:8+1]
 	}
 	return shortUrl
