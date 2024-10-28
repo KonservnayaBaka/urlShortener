@@ -9,7 +9,7 @@ import (
 
 func FollowShortLink(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		shortURL := c.Param("shortUrl")
+		shortURL := c.Param("short_url")
 
 		if shortURL == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "shortUrl is required"})
