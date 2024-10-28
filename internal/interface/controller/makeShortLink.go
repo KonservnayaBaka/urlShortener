@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"urlShortener/internal/application/service"
 	"urlShortener/internal/domain/entity"
+	"urlShortener/internal/utils"
 )
 
 func MakeShortLink(db *gorm.DB) gin.HandlerFunc {
@@ -21,6 +22,7 @@ func MakeShortLink(db *gorm.DB) gin.HandlerFunc {
 
 		shortUrl := service.GenerateShortURL(urlModel.OriginalUrl, db)
 		urlModel.ShortUrl = shortUrl
+		urlModel.ShortUrlWhithDomain = utils.Domain() + shortUrl
 
 		if err := db.Create(&urlModel).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
