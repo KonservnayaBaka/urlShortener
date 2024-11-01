@@ -7,6 +7,14 @@ import (
 )
 
 func InitializeRoutes(r *gin.Engine, db *gorm.DB) {
-	r.POST("/shorten", controller.MakeShortLink(db))
-	r.GET("/:short_url", controller.FollowShortLink(db))
+	linkGroup := r.Group("/link")
+	{
+		linkGroup.POST("/shorten", controller.MakeShortLink(db))
+		linkGroup.GET("/:short_url", controller.FollowShortLink(db))
+	}
+	authGroup := r.Group("/auth")
+	{
+		authGroup.POST("/login", controller.RegUser(db))
+		authGroup.GET("/signin", controller.AuthUser(db))
+	}
 }

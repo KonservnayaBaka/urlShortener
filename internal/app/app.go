@@ -11,7 +11,7 @@ func Run() {
 	r := gin.Default()
 	db := database.NewDB()
 
-	db.AutoMigrate(&entity.Urls{})
+	db.AutoMigrate(&entity.Urls{}, &entity.User{})
 
 	router.InitializeRoutes(r, db)
 	r.Run("localhost:8085")
