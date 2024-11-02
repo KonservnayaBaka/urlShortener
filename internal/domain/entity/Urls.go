@@ -8,4 +8,5 @@ type Urls struct {
 	ShortUrl            string    `json:"shortUrl"`
 	ShortUrlWhithDomain string    `json:"shortDomainUrl"`
 	CreatedAt           time.Time `json:"created_at"`
+	UserLogin           string    `json:"user_login"`
 }

@@ -24,6 +24,9 @@ func MakeShortLink(db *gorm.DB) gin.HandlerFunc {
 		urlModel.ShortUrl = shortUrl
 		urlModel.ShortUrlWhithDomain = utils.Domain() + shortUrl
 
+		username := c.MustGet("username").(string)
+		urlModel.UserLogin = username
+
 		if err := db.Create(&urlModel).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

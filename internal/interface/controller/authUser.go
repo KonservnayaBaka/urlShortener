@@ -32,8 +32,14 @@ func AuthUser(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
+		token, err := service.GenerateToken(userModel.Login)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
 		storedUser.Password = ""
 
-		c.JSON(http.StatusOK, gin.H{"status": true, "data": storedUser})
+		c.JSON(http.StatusOK, gin.H{"status": true, "data": storedUser, "token": token})
 	}
 }
