@@ -12,7 +12,7 @@ func GetUserLinks(db *gorm.DB) gin.HandlerFunc {
 		username := c.MustGet("username").(string)
 
 		var urls []entity.Urls
-		if err := db.Where("user_id = ?", username).Find(&urls).Error; err != nil {
+		if err := db.Where("user_login = ?", username).Find(&urls).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
 		}
