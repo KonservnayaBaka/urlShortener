@@ -14,6 +14,7 @@ func InitializeRoutes(r *gin.Engine, db *gorm.DB) {
 	{
 		linkGroup.POST("/shorten", JWTAuthMiddleware(), controller.MakeShortLink(db))
 		linkGroup.GET("/user", JWTAuthMiddleware(), controller.GetUserLinks(db))
+		linkGroup.POST("/upload", JWTAuthMiddleware(), controller.UploadCSV(db)) // Новый маршрут
 	}
 	authGroup := r.Group("/auth")
 	{
@@ -21,8 +22,8 @@ func InitializeRoutes(r *gin.Engine, db *gorm.DB) {
 		authGroup.POST("/signin", controller.AuthUser(db))
 	}
 	r.GET("/:short_url", controller.FollowShortLink(db))
-
 }
+
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
