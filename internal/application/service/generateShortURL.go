@@ -13,13 +13,13 @@ func GenerateShortURL(originalUrl string, db *gorm.DB) string {
 
 	shortUrl := hashString[:8]
 
-	if uniqCheck(shortUrl, db) == true {
+	if UniqCheck(shortUrl, db) == true {
 		shortUrl = hashString[:8+1]
 	}
 	return shortUrl
 }
 
-func uniqCheck(shortUrl string, db *gorm.DB) bool {
+func UniqCheck(shortUrl string, db *gorm.DB) bool {
 	check := db.Where("short_url = ?", shortUrl).First(&entity.Urls{})
 	if check.Error != nil {
 		return false
