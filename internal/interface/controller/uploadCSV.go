@@ -29,6 +29,6 @@ func UploadCSV(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"status": "CSV file processed successfully"})
+		c.JSON(http.StatusOK, gin.H{"status": true})
 	}
 }
