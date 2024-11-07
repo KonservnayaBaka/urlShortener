@@ -18,6 +18,12 @@ func MakeShortLink(db *gorm.DB) gin.HandlerFunc {
 		}
 		if urlModel.OriginalUrl == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"originalUrl": "String is empty"})
+			return
+		}
+
+		if service.ValidateUrl(urlModel.OriginalUrl) == false {
+			c.JSON(http.StatusBadRequest, gin.H{"originalUrl": "URL is not validated"})
+			return
 		}
 
 		shortUrl := service.GenerateShortURL(urlModel.OriginalUrl, db)

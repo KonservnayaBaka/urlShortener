@@ -21,6 +21,11 @@ func WriteShortLink(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
+		if service.ValidateUrl(urlModel.OriginalUrl) == false {
+			c.JSON(http.StatusBadRequest, gin.H{"originalUrl": "URL is not validated"})
+			return
+		}
+
 		if service.UniqCheck(urlModel.ShortUrl, db) == true {
 			c.JSON(http.StatusBadRequest, gin.H{"originalUrl": "short url is exist"})
 			return
