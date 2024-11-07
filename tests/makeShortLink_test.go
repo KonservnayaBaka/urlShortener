@@ -25,39 +25,39 @@ func TestMakeShortLink(t *testing.T) {
 	router.POST("/link/makeShortLink", controller.MakeShortLink(db))
 	router.Use(router2.JWTAuthMiddleware())
 
-	//t.Run("successful make short link", func(t *testing.T) {
-	//	user := entity.User{
-	//		Login:    "testuser",
-	//		Password: "testpassword",
-	//	}
-	//	jsonData, _ := json.Marshal(user)
-	//
-	//	req, _ := http.NewRequest("POST", "/auth/login", bytes.NewBuffer(jsonData))
-	//	req.Header.Set("Content-Type", "application/json")
-	//
-	//	w := httptest.NewRecorder()
-	//	router.ServeHTTP(w, req)
-	//
-	//	assert.Equal(t, http.StatusOK, w.Code)
-	//
-	//	var response map[string]string
-	//	json.Unmarshal(w.Body.Bytes(), &response)
-	//	token := response["token"]
-	//
-	//	url := entity.Urls{
-	//		OriginalUrl: "https://github.com/stretchr/testify",
-	//	}
-	//	jsonData, _ = json.Marshal(url)
-	//
-	//	req, _ = http.NewRequest("POST", "/link/makeShortLink", bytes.NewBuffer(jsonData))
-	//	req.Header.Set("Content-Type", "application/json")
-	//	req.Header.Set("Authorization", "Bearer "+token)
-	//
-	//	w = httptest.NewRecorder()
-	//	router.ServeHTTP(w, req)
-	//
-	//	assert.Equal(t, http.StatusOK, w.Code)
-	//})
+	t.Run("successful make short link", func(t *testing.T) {
+		user := entity.User{
+			Login:    "testuser",
+			Password: "testpassword",
+		}
+		jsonData, _ := json.Marshal(user)
+
+		req, _ := http.NewRequest("POST", "/auth/login", bytes.NewBuffer(jsonData))
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var response map[string]string
+		json.Unmarshal(w.Body.Bytes(), &response)
+		token := response["token"]
+
+		url := entity.Urls{
+			OriginalUrl: "https://github.com/stretchr/testify",
+		}
+		jsonData, _ = json.Marshal(url)
+
+		req, _ = http.NewRequest("POST", "/link/makeShortLink", bytes.NewBuffer(jsonData))
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", "Bearer "+token)
+
+		w = httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+	})
 
 	t.Run("missing make short link", func(t *testing.T) {
 		url := entity.Urls{
