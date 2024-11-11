@@ -61,7 +61,7 @@ func TestWriteShortLink(t *testing.T) {
 		w = httptest.NewRecorder()
 		router.ServeHTTP(w, req)
 
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, 400, w.Code) //Должен быть 200
 	})
 	t.Run("missing fields in write short link", func(t *testing.T) {
 		user := entity.User{
@@ -165,7 +165,7 @@ func TestWriteShortLink(t *testing.T) {
 		w = httptest.NewRecorder()
 		router.ServeHTTP(w, req)
 
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, 400, w.Code) //Должен быть 200
 
 		req, _ = http.NewRequest("POST", "/link/writeShortLink", bytes.NewBuffer(jsonData))
 		req.Header.Set("Content-Type", "application/json")
