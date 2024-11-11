@@ -13,6 +13,10 @@ func Run() {
 
 	db.AutoMigrate(&entity.Urls{}, &entity.User{})
 
+	r.StaticFile("/swagger-ui", "./static/swagger-ui.html")
+	r.GET("/swagger.yaml", func(c *gin.Context) {
+		c.File("./swagger.yaml")
+	})
 	router.InitializeRoutes(r, db)
 	r.Run("localhost:8085")
 }

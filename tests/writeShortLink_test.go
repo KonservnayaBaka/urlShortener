@@ -63,7 +63,6 @@ func TestWriteShortLink(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
-
 	t.Run("missing fields in write short link", func(t *testing.T) {
 		user := entity.User{
 			Login:    "testuser",

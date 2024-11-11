@@ -1,0 +1,442 @@
+openapi: 3.0.3
+info:
+  title: URL Shortener API
+  description: API для сервиса сокращения ссылок.
+  version: 0.0.1
+
+servers:
+  - url: http://localhost:8085/api/v1
+
+paths:
+
+  /auth/login:
+    post:
+      summary: Register a user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Nicolas"
+                login:
+                  type: string
+                  example: "Nic123"
+                password:
+                  type: string
+                  example: "1234"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: true
+        '400':
+          description: One of the fields is empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "login or password or name is empty"
+
+  /auth/signin:
+    post:
+      summary: Authenticate a user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                  example: "Nicolas"
+                password:
+                  type: string
+                  example: "1234"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      name:
+                        type: string
+                        example: "Nicolas"
+                      login:
+                        type: string
+                        example: "Nic123"
+                      password:
+                        type: string
+                        example: ""
+                  status:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5pYzEyMyIsImV4cCI6MTczMTM1OTgzNX0.7Y6UdK7kdet8FGTfE0cn7MEsJ-WwSB4eb-LfTO1-5sY"
+        '400':
+          description: One of the fields is empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "login or password is empty"
+
+  /link/shorten:
+    post:
+      summary: Shorten a URL
+      tags:
+        - Link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                originalUrl:
+                  type: string
+                  example: "https://pkg.go.dev/github.com/golang-jwt/jwt/v5#section-readme"
+      responses:
+        '200':
+          headers:
+            Authorization:
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5pYzEyMyIsImV4cCI6MTczMTM1OTgzNX0.7Y6UdK7kdet8FGTfE0cn7MEsJ-WwSB4eb-LfTO1-5sY"
+              description: JWT Token
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 39
+                  originalUrl:
+                    type: string
+                    example: "https://pkg.go.dev/github.com/golang-jwt/jwt/v5#section-readme"
+                  shortUrl:
+                    type: string
+                    example: "6a71cfe9"
+                  shortDomainUrl:
+                    type: string
+                    example: "http://localhost:8085/6a71cfe9"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-11-11T23:23:23.478583+03:00"
+                  user_login:
+                    type: string
+                    example: "Nic123"
+        '400':
+          headers:
+            Authorization:
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5pYzEyMyIsImV4cCI6MTczMTM1OTgzNX0.7Y6UdK7kdet8FGTfE0cn7MEsJ-WwSB4eb-LfTO1-5sY"
+              description: JWT Token
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      originalUrl:
+                        type: string
+                        example: "String is empty"
+                  - type: object
+                    properties:
+                      originalUrl:
+                        type: string
+                        example: "URL is not validated"
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        example: "Invalid request payload"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal Server Error"
+      security:
+        - bearerAuth: []
+
+  /link/writeLink:
+    post:
+      summary: Write a short link
+      tags:
+        - Link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                originalUrl:
+                  type: string
+                  example: "https://it.wikipedia.org/wiki/Go_(linguaggio_di_programmazione)"
+                shortUrl:
+                  type: string
+                  example: "gospanish"
+      responses:
+        '200':
+          headers:
+            Authorization:
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5pYzEyMyIsImV4cCI6MTczMTM1OTgzNX0.7Y6UdK7kdet8FGTfE0cn7MEsJ-WwSB4eb-LfTO1-5sY"
+              description: JWT Token
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 40
+                  originalUrl:
+                    type: string
+                    example: "https://it.wikipedia.org/wiki/Go_(linguaggio_di_programmazione)"
+                  shortUrl:
+                    type: string
+                    example: "gospanish"
+                  shortDomainUrl:
+                    type: string
+                    example: "http://localhost:8085/gospanish"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-11-11T23:34:26.5486592+03:00"
+                  user_login:
+                    type: string
+                    example: "Nic123"
+      security:
+        - bearerAuth: []
+
+  /link/changeLink:
+    post:
+      summary: Change a short link
+      tags:
+        - Link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                shortUrl:
+                  type: string
+                  example: "gospanish"
+                newShortUrl:
+                  type: string
+                  example: "go-on-spanish"
+      responses:
+        '200':
+          headers:
+            Authorization:
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5pYzEyMyIsImV4cCI6MTczMTM1OTgzNX0.7Y6UdK7kdet8FGTfE0cn7MEsJ-WwSB4eb-LfTO1-5sY"
+              description: JWT Token
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 40
+                  originalUrl:
+                    type: string
+                    example: "https://it.wikipedia.org/wiki/Go_(linguaggio_di_programmazione)"
+                  shortUrl:
+                    type: string
+                    example: "go-on-spanish"
+                  shortDomainUrl:
+                    type: string
+                    example: "http://localhost:8085/go-on-spanish"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-11-11T23:34:26.548659+03:00"
+                  user_login:
+                    type: string
+                    example: "Nic123"
+      security:
+        - bearerAuth: []
+
+  /link/uploadCSV:
+    post:
+      summary: Upload CSV file
+      tags:
+        - Link
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: .csv
+      responses:
+        '200':
+          headers:
+            Authorization:
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5pYzEyMyIsImV4cCI6MTczMTM1OTgzNX0.7Y6UdK7kdet8FGTfE0cn7MEsJ-WwSB4eb-LfTO1-5sY"
+              description: JWT Token
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: true
+      security:
+        - bearerAuth: []
+
+  /link/user:
+    get:
+      summary: Get user links
+      tags:
+        - Link
+      responses:
+        '200':
+          headers:
+            Authorization:
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5pYzEyMyIsImV4cCI6MTczMTM1OTgzNX0.7Y6UdK7kdet8FGTfE0cn7MEsJ-WwSB4eb-LfTO1-5sY"
+              description: JWT Token
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 39
+                        originalUrl:
+                          type: string
+                          example: "https://pkg.go.dev/github.com/golang-jwt/jwt/v5#section-readme"
+                        shortUrl:
+                          type: string
+                          example: "6a71cfe9"
+                        shortDomainUrl:
+                          type: string
+                          example: "http://localhost:8085/6a71cfe9"
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-11-11T23:23:23.478583+03:00"
+                        user_login:
+                          type: string
+                          example: "Nic123"
+                    - type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 40
+                        originalUrl:
+                          type: string
+                          example: "https://it.wikipedia.org/wiki/Go_(linguaggio_di_programmazione)"
+                        shortUrl:
+                          type: string
+                          example: "go-on-spanish"
+                        shortDomainUrl:
+                          type: string
+                          example: "http://localhost:8085/go-on-spanish"
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-11-11T23:34:26.548659+03:00"
+                        user_login:
+                          type: string
+                          example: "Nic123"
+      security:
+        - bearerAuth: []
+
+  /{short_url}:
+    get:
+      summary: Follow a short link
+      tags:
+        - Link
+      parameters:
+        - name: short_url
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "abc123"
+      responses:
+        '302':
+          description: Redirect to the original URL
+        '404':
+          description: Short URL not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
