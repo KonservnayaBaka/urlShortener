@@ -16,7 +16,7 @@ func InitializeRoutes(r *gin.Engine, db *gorm.DB) {
 				linkGroup.POST("/shorten", JWTAuthMiddleware(), controller.MakeShortLink(db))
 				linkGroup.POST("/writeLink", JWTAuthMiddleware(), controller.WriteShortLink(db))
 				linkGroup.POST("/changeLink", JWTAuthMiddleware(), controller.ChangeShortLink(db))
-				linkGroup.GET("/user", JWTAuthMiddleware(), controller.GetUserLinks(db))
+				linkGroup.GET("/user", controller.GetUserLinks(db))
 				linkGroup.POST("/uploadCSV", JWTAuthMiddleware(), controller.UploadCSV(db))
 			}
 			authGroup := v1Group.Group("/auth")

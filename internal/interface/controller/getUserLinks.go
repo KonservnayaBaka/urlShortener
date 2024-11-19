@@ -9,7 +9,11 @@ import (
 
 func GetUserLinks(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		username := c.MustGet("username").(string)
+		username := c.Query("username")
+		if username == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Username query parameter is required"})
+			return
+		}
 
 		var urls []entity.Urls
 		if err := db.Where("user_login = ?", username).Find(&urls).Error; err != nil {

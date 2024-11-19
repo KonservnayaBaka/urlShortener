@@ -19,7 +19,8 @@ ENV DB_USER=postgres
 ENV DB_PASSWORD=1234
 ENV DB_NAME=urlshortener
 ENV DB_PORT=5432
+ENV PGPASSWORD=$DB_PASSWORD
 
-CMD ["sh", "-c", "until psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -W -c 'select 1'; do sleep 1; done && psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -W -f /migrations/00001_create_urls_table.down.sql && ./main"]
+CMD ["sh", "-c", "until psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c 'select 1'; do sleep 1; done && psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -f /migrations/00001_create_urls_table.down.sql && ./main"]
 
 EXPOSE 8000

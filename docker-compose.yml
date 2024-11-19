@@ -1,3 +1,5 @@
+version: "3.3"
+
 services:
   app:
     build: .
@@ -14,16 +16,17 @@ services:
       - db
 
   db:
-    image: postgres:13-alpine
+    restart: always
+    image: postgres:15.2
     container_name: urlShortener-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: urlshortener
     ports:
-      - "5434:5432"
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
